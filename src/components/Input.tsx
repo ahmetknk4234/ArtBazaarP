@@ -39,7 +39,11 @@ const Input: React.FC<InputProps> = ({
             autoCapitalize={autoCapitalize}
           />
           <TouchableOpacity onPress={onTogglePassword} style={styles.eyeIcon}>
-            <Text style={styles.eyeIconText}>👁</Text>
+            {secureTextEntry ? (
+              <Text style={styles.eyeIconText}>⌣</Text>
+            ) : (
+              <Text style={styles.eyeIconText}>👁</Text>
+            )}
           </TouchableOpacity>
         </View>
       ) : (
