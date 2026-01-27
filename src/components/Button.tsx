@@ -7,6 +7,7 @@ interface ButtonProps {
   variant?: 'primary' | 'secondary';
   style?: ViewStyle;
   textStyle?: TextStyle;
+  disabled?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -15,16 +16,19 @@ const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   style,
   textStyle,
+  disabled = false,
 }) => {
   return (
     <TouchableOpacity
       style={[
         styles.button,
         variant === 'primary' ? styles.primaryButton : styles.secondaryButton,
+        disabled && styles.disabledButton,
         style,
       ]}
       onPress={onPress}
       activeOpacity={0.8}
+      disabled={disabled}
     >
       <Text
         style={[
@@ -62,6 +66,9 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: {
     color: '#000000',
+  },
+  disabledButton: {
+    opacity: 0.5,
   },
 });
 

@@ -9,13 +9,35 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { SocialLoginButtons, Divider, Button, Checkbox, Input, Header, NavigationLink } from '../src/components';
+import { useAuth } from '../src/contexts/AuthContext';
+import { Alert } from 'react-native';
 
 const LoginScreen: React.FC = () => {
     const router = useRouter();
+    const { signIn } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [rememberMe, setRememberMe] = useState(true);
+    const [rememberMe, setRememberMe] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const handleLogin = async () => {
+        if (!email || !password) {
+            Alert.alert('Hata', 'Lütfen e-posta ve şifrenizi giriniz.');
+            return;
+        }
+
+        try {
+            setLoading(true);
+            await signIn(email, password, rememberMe);
+            router.replace('/dashboard');
+        } catch (error: any) {
+            console.error(error);
+            Alert.alert('Giriş Hatası', error.message || 'Giriş yapılırken bir sorun oluştu.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <SafeAreaView style={styles.container} edges={['bottom', 'left', 'right']}>
@@ -69,8 +91,9 @@ const LoginScreen: React.FC = () => {
 
                     {/* Giriş Yap Butonu */}
                     <Button
-                        title="Giriş Yap"
-                        onPress={() => { }}
+                        title={loading ? "Giriş Yapılıyor..." : "Giriş Yap"}
+                        onPress={handleLogin}
+                        disabled={loading}
                         style={{ marginBottom: 24 }}
                     />
 

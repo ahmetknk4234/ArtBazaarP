@@ -9,14 +9,43 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { SocialLoginButtons, Divider, Button, Checkbox, Input, Header, NavigationLink } from '../src/components';
+import { useAuth } from '../src/contexts/AuthContext';
+import { Alert } from 'react-native';
 
 const RegisterScreen: React.FC = () => {
     const router = useRouter();
+    const { signUp } = useAuth();
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [acceptPrivacy, setAcceptPrivacy] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const handleRegister = async () => {
+        if (!email || !password || !fullName) {
+            Alert.alert('Hata', 'Lütfen tüm alanları doldurunuz.');
+            return;
+        }
+
+        if (!acceptPrivacy) {
+            Alert.alert('Hata', 'Lütfen gizlilik politikasını kabul ediniz.');
+            return;
+        }
+
+        try {
+            setLoading(true);
+            await signUp(email, password, fullName);
+            Alert.alert('Başarılı', 'Hesabınız oluşturuldu!', [
+                { text: 'Tamam', onPress: () => router.replace('/login') }
+            ]);
+        } catch (error: any) {
+            console.error(error);
+            Alert.alert('Kayıt Hatası', error.message || 'Kayıt olurken bir sorun oluştu.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <SafeAreaView style={styles.container} edges={['bottom', 'left', 'right']}>
@@ -77,8 +106,9 @@ const RegisterScreen: React.FC = () => {
 
                     {/* Oturum Aç Butonu */}
                     <Button
-                        title="Oturum aç"
-                        onPress={() => { }}
+                        title={loading ? "Kayıt Olunuyor..." : "Kayıt Ol"}
+                        onPress={handleRegister}
+                        disabled={loading}
                         style={{ marginBottom: 24 }}
                     />
 
