@@ -6,9 +6,12 @@ import {
     onAuthStateChanged, 
     updateProfile,
     User,
-    getAuth
+    getAuth,
+    GoogleAuthProvider,
+    signInWithCredential
 } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { auth } from '../config/firebaseConfig';
 
 const REMEMBER_ME_KEY = '@auth_remember_me';
@@ -16,13 +19,47 @@ const REMEMBER_ME_KEY = '@auth_remember_me';
 class AuthService {
     private static instance: AuthService;
 
-    private constructor() { }
+    private constructor() {
+        GoogleSignin.configure({
+            webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+            // offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+        });
+    }
 
     public static getInstance(): AuthService {
         if (!AuthService.instance) {
             AuthService.instance = new AuthService();
         }
         return AuthService.instance;
+    }
+
+    /**
+     * Google ile giriş yapar
+     */
+    async signInWithGoogle(): Promise<User> {
+        try {
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
+            const idToken = userInfo.data?.idToken;
+            
+            if (!idToken) {
+                throw new Error('Google Sign-In failed: No idToken found');
+            }
+
+            const credential = GoogleAuthProvider.credential(idToken);
+            const userCredential = await signInWithCredential(auth, credential);
+            return userCredential.user;
+        } catch (error: any) {
+            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+                throw new Error('Giriş iptal edildi.');
+            } else if (error.code === statusCodes.IN_PROGRESS) {
+                throw new Error('Giriş işlemi zaten devam ediyor.');
+            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+                throw new Error('Google Play Hizmetleri kullanılamıyor.');
+            } else {
+                throw this.handleAuthError(error);
+            }
+        }
     }
 
     /**

@@ -1,7 +1,21 @@
-import React from 'react';
-import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
+import { useAuth } from '../contexts/AuthContext';
+import { useRouter } from 'expo-router';
 
 const SocialLoginButtons: React.FC = () => {
+  const { signInWithGoogle } = useAuth();
+  const router = useRouter();
+
+  const handleGoogleLogin = async () => {
+    try {
+      await signInWithGoogle();
+      router.replace('/dashboard');
+    } catch (error: any) {
+      console.error(error);
+      Alert.alert('Google Giriş Hatası', error.message);
+    }
+  };
+
   return (
     <View style={styles.socialButtonsContainer}>
       <TouchableOpacity style={styles.socialButton}>
@@ -11,7 +25,7 @@ const SocialLoginButtons: React.FC = () => {
           resizeMode="contain"
         />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.socialButton}>
+      <TouchableOpacity style={styles.socialButton} onPress={handleGoogleLogin}>
         <Image
           source={require('../assets/google_logo.png')}
           style={styles.socialIcon}
