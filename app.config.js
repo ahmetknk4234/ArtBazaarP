@@ -23,6 +23,7 @@ export default {
                 backgroundColor: "#ffffff"
             },
             edgeToEdgeEnabled: true,
+            launchMode: "singleTask",
             package: "com.artbazaar.app",
             googleServicesFile: process.env.GOOGLE_SERVICES_JSON || "./google-services.json"
         },
