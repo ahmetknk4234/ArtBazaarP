@@ -8,10 +8,12 @@ import {
     User,
     getAuth,
     GoogleAuthProvider,
+    FacebookAuthProvider,
     signInWithCredential
 } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import { auth } from '../config/firebaseConfig';
 
 const REMEMBER_ME_KEY = '@auth_remember_me';
@@ -59,6 +61,39 @@ class AuthService {
             } else {
                 throw this.handleAuthError(error);
             }
+        }
+    }
+
+    /**
+     * Facebook ile giriş yapar
+     */
+    async signInWithFacebook(): Promise<User> {
+        try {
+            // Önce varsa mevcut oturumu kapat
+            LoginManager.logOut();
+            
+            // Facebook login dialog'unu aç
+            const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+            
+            if (result.isCancelled) {
+                throw new Error('Giriş iptal edildi.');
+            }
+            
+            // Access token al
+            const data = await AccessToken.getCurrentAccessToken();
+            
+            if (!data?.accessToken) {
+                throw new Error('Facebook Access Token alınamadı.');
+            }
+            
+            // Firebase credential oluştur
+            const credential = FacebookAuthProvider.credential(data.accessToken);
+            
+            // Firebase'e giriş yap
+            const userCredential = await signInWithCredential(auth, credential);
+            return userCredential.user;
+        } catch (error: any) {
+            throw this.handleAuthError(error);
         }
     }
 

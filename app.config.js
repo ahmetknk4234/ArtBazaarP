@@ -35,7 +35,16 @@ export default {
         plugins: [
             "expo-router",
             "expo-font",
-            "@react-native-google-signin/google-signin"
+            "@react-native-google-signin/google-signin",
+            [
+                "react-native-fbsdk-next",
+                {
+                    appID: "1268833478439759",
+                    clientToken: "83bf98ac71bd4fbaf60a47f74428b895",
+                    displayName: "ArtBazaar",
+                    scheme: "fb1268833478439759"
+                }
+            ]
         ],
         extra: {
             router: {},

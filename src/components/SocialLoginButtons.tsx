@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useRouter } from 'expo-router';
 
 const SocialLoginButtons: React.FC = () => {
-  const { signInWithGoogle } = useAuth();
+  const { signInWithGoogle, signInWithFacebook } = useAuth();
   const router = useRouter();
 
   const handleGoogleLogin = async () => {
@@ -13,6 +13,16 @@ const SocialLoginButtons: React.FC = () => {
     } catch (error: any) {
       console.error(error);
       Alert.alert('Google Giriş Hatası', error.message);
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    try {
+      await signInWithFacebook();
+      router.replace('/dashboard');
+    } catch (error: any) {
+      console.error(error);
+      Alert.alert('Facebook Giriş Hatası', error.message);
     }
   };
 
@@ -32,7 +42,7 @@ const SocialLoginButtons: React.FC = () => {
           resizeMode="contain"
         />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.socialButton}>
+      <TouchableOpacity style={styles.socialButton} onPress={handleFacebookLogin}>
         <Image
           source={require('../assets/facebook_logo.png')}
           style={styles.socialIcon}
