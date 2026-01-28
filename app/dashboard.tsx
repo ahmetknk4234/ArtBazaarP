@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../src/contexts/AuthContext';
 import { useRouter } from 'expo-router';
+import { BottomNavigation } from '../src/components';
 
 export default function Dashboard() {
     const { signOut, user } = useAuth();
@@ -18,7 +19,7 @@ export default function Dashboard() {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
             <View style={styles.content}>
                 <Text style={styles.title}>Anasayfa</Text>
                 <Text style={styles.subtitle}>Hoşgeldiniz, {user?.displayName || user?.email}</Text>
@@ -27,6 +28,8 @@ export default function Dashboard() {
                     <Button title="Çıkış Yap" onPress={handleSignOut} color="#FF3B30" />
                 </View>
             </View>
+
+            <BottomNavigation />
         </SafeAreaView>
     );
 }
@@ -58,3 +61,4 @@ const styles = StyleSheet.create({
         maxWidth: 200,
     }
 });
+

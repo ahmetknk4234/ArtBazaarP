@@ -5,3 +5,4 @@ export { default as Checkbox } from './Checkbox';
 export { default as SocialLoginButtons } from './SocialLoginButtons';
 export { default as Divider } from './Divider';
 export { default as NavigationLink } from './NavigationLink';
+export { default as BottomNavigation } from './BottomNavigation';
