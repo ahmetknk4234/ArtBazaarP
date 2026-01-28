@@ -84,7 +84,7 @@ const LoginScreen: React.FC = () => {
                             checked={rememberMe}
                             onToggle={() => setRememberMe(!rememberMe)}
                         />
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => router.push('/forgot-password')}>
                             <Text style={styles.forgotPassword}>Parolanızı mı unuttunuz?</Text>
                         </TouchableOpacity>
                     </View>
