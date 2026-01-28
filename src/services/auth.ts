@@ -11,10 +11,19 @@ import {
     FacebookAuthProvider,
     signInWithCredential
 } from 'firebase/auth';
+import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
-import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import { auth } from '../config/firebaseConfig';
+
+// Facebook SDK only works on native platforms
+let LoginManager: any = null;
+let AccessToken: any = null;
+if (Platform.OS !== 'web') {
+    const fbsdk = require('react-native-fbsdk-next');
+    LoginManager = fbsdk.LoginManager;
+    AccessToken = fbsdk.AccessToken;
+}
 
 const REMEMBER_ME_KEY = '@auth_remember_me';
 
@@ -69,6 +78,11 @@ class AuthService {
      */
     async signInWithFacebook(): Promise<User> {
         try {
+            // Web platformunda Facebook SDK desteklenmiyor
+            if (Platform.OS === 'web' || !LoginManager || !AccessToken) {
+                throw new Error('Facebook girişi web platformunda desteklenmiyor.');
+            }
+
             // Önce varsa mevcut oturumu kapat
             LoginManager.logOut();
             
