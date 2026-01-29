@@ -10,36 +10,22 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../src/contexts/AuthContext';
-import { BottomNavigation } from '../src/components';
-import { Ionicons } from '@expo/vector-icons';
+import { BottomNavigation, ProductCard } from '../src/components';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 48) / 2;
 
 // Temsili Veriler
 const categories = [
-    { id: '1', name: 'Resim', icon: 'brush-outline' },
-    { id: '2', name: 'Heykel', icon: 'cube-outline' },
-    { id: '3', name: 'Fotoğraf', icon: 'camera-outline' },
-    { id: '4', name: 'Dijital', icon: 'desktop-outline' },
+    { id: '1', name: 'Tümü' },
+    { id: '2', name: 'Geleneksel' },
+    { id: '3', name: 'Seramik' },
+    { id: '4', name: 'Zanaat' },
+    { id: '5', name: 'Heykel' },
+    { id: '6', name: 'Resim' },
+    { id: '7', name: 'Dijital' },
 ];
 
-const featuredProducts = [
-    {
-        id: '1',
-        title: 'Premium Birinci',
-        artist: 'Ahmet Yılmaz',
-        price: '29.400 ₺',
-        image: null,
-    },
-    {
-        id: '2',
-        title: 'Şerdenha Akçesi',
-        artist: 'Mehmet Demir',
-        price: '37.500 ₺',
-        image: null,
-    },
-];
 
 const products = [
     {
@@ -48,6 +34,7 @@ const products = [
         artist: 'Elif Kara',
         price: '31.500 ₺',
         isAd: false,
+        category: 'Geleneksel',
     },
     {
         id: '2',
@@ -55,6 +42,7 @@ const products = [
         artist: '',
         price: '37.500 ₺',
         isAd: true,
+        category: '',
     },
     {
         id: '3',
@@ -62,20 +50,23 @@ const products = [
         artist: 'Can Öztürk',
         price: '38.200 ₺',
         isAd: false,
+        category: 'Seramik',
     },
     {
         id: '4',
-        title: 'Sanatçı Reklam Alanı',
-        artist: '',
-        price: '',
-        isAd: true,
-    },
-    {
-        id: '5',
         title: 'Renklerin Dansı',
         artist: 'Zeynep Ak',
         price: '21.500 ₺',
         isAd: false,
+        category: 'Resim',
+    },
+    {
+        id: '5',
+        title: 'Sanatçı Reklam Alanı',
+        artist: '',
+        price: '',
+        isAd: true,
+        category: '',
     },
     {
         id: '6',
@@ -83,59 +74,28 @@ const products = [
         artist: 'Ali Veli',
         price: '27.650 ₺',
         isAd: false,
+        category: 'Dijital',
+    },
+    {
+        id: '7',
+        title: 'Gece Mavisi',
+        artist: 'Selin Yıldız',
+        price: '45.000 ₺',
+        isAd: false,
+        category: 'Geleneksel',
+    },
+    {
+        id: '8',
+        title: 'Sonbahar Akşamı',
+        artist: 'Mert Aydın',
+        price: '33.750 ₺',
+        isAd: false,
+        category: 'Resim',
     },
 ];
 
 export default function Dashboard() {
     const { user } = useAuth();
-
-    const renderCategoryItem = (category: typeof categories[0]) => (
-        <TouchableOpacity key={category.id} style={styles.categoryItem}>
-            <View style={styles.categoryIconContainer}>
-                <Ionicons name={category.icon as any} size={24} color="#333" />
-            </View>
-            <Text style={styles.categoryName}>{category.name}</Text>
-        </TouchableOpacity>
-    );
-
-    const renderFeaturedCard = (product: typeof featuredProducts[0]) => (
-        <View key={product.id} style={styles.featuredCard}>
-            <View style={styles.featuredImagePlaceholder}>
-                <Ionicons name="image-outline" size={40} color="#999" />
-            </View>
-            <View style={styles.featuredInfo}>
-                <Text style={styles.featuredTitle}>{product.title}</Text>
-                <Text style={styles.featuredArtist}>{product.artist}</Text>
-                <Text style={styles.featuredPrice}>{product.price}</Text>
-            </View>
-        </View>
-    );
-
-    const renderProductCard = (product: typeof products[0]) => (
-        <View key={product.id} style={styles.productCard}>
-            {product.isAd ? (
-                <View style={styles.adContainer}>
-                    <Text style={styles.adTitle}>Sanatçı</Text>
-                    <Text style={styles.adTitle}>Reklam</Text>
-                    <Text style={styles.adTitle}>Alanı</Text>
-                </View>
-            ) : (
-                <>
-                    <View style={styles.productImagePlaceholder}>
-                        <Ionicons name="image-outline" size={32} color="#ccc" />
-                    </View>
-                    <View style={styles.productInfo}>
-                        <Text style={styles.productTitle}>{product.title}</Text>
-                        <Text style={styles.productArtist}>{product.artist}</Text>
-                        <Text style={styles.productPrice}>{product.price}</Text>
-                        <TouchableOpacity style={styles.buyButton}>
-                            <Text style={styles.buyButtonText}>Şimdi Al</Text>
-                        </TouchableOpacity>
-                    </View>
-                </>
-            )}
-        </View>
-    );
 
     return (
         <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
@@ -149,7 +109,7 @@ export default function Dashboard() {
                         {/* Sol taraf - Menu ve Kullanıcı */}
                         <View style={styles.headerLeft}>
                             <TouchableOpacity style={styles.menuButton}>
-                                <Ionicons name="menu-outline" size={24} color="#000" />
+                                <Image source={require('../src/assets/Menu_bar.png')} style={{ width: 24, height: 24, tintColor: '#000' }} resizeMode="contain" />
                             </TouchableOpacity>
                             <Text style={styles.greetingText}>Selam {user?.displayName || user?.email?.split('@')[0] || 'Kullanıcı'}</Text>
                         </View>
@@ -157,10 +117,10 @@ export default function Dashboard() {
                         {/* Sağ taraf - İkonlar */}
                         <View style={styles.headerRight}>
                             <TouchableOpacity style={styles.iconButton}>
-                                <Ionicons name="search-outline" size={22} color="#000" />
+                                <Image source={require('../src/assets/search_icon.png')} style={{ width: 22, height: 22, tintColor: '#000' }} resizeMode="contain" />
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.iconButton}>
-                                <Ionicons name="bag-outline" size={22} color="#000" />
+                                <Image source={require('../src/assets/bag_icon.png')} style={{ width: 22, height: 22, tintColor: '#000' }} resizeMode="contain" />
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.profileButton}>
                                 <Image
@@ -188,7 +148,7 @@ export default function Dashboard() {
 
                             <TouchableOpacity style={styles.promoLink}>
                                 <Text style={styles.promoLinkText}>Açık Artırmayı İncele</Text>
-                                <Text style={styles.promoArrow}> →</Text>
+                                <Image source={require('../src/assets/Arrow_icon.png')} style={{ width: 16, height: 16, marginLeft: 7, tintColor: '#fff' }} resizeMode="contain" />
                             </TouchableOpacity>
                         </View>
 
@@ -217,30 +177,49 @@ export default function Dashboard() {
 
                 {/* Categories Section */}
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Kategoriler</Text>
+                    <View style={styles.sectionHeader}>
+                        <Text style={styles.sectionTitle}>Kategoriler</Text>
+                        <TouchableOpacity>
+                            <Text style={styles.seeAllText}>Tümünü Gör</Text>
+                        </TouchableOpacity>
+                    </View>
                     <ScrollView
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         contentContainerStyle={styles.categoriesContainer}
                     >
-                        {categories.map(renderCategoryItem)}
-                    </ScrollView>
-                </View>
-
-                {/* Featured Products */}
-                <View style={styles.section}>
-                    <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={styles.featuredContainer}
-                    >
-                        {featuredProducts.map(renderFeaturedCard)}
+                        {categories.map((category, index) => (
+                            <TouchableOpacity
+                                key={category.id}
+                                style={[
+                                    styles.categoryTab,
+                                    index === 1 && styles.categoryTabActive
+                                ]}
+                            >
+                                <Text style={[
+                                    styles.categoryTabText,
+                                    index === 1 && styles.categoryTabTextActive
+                                ]}>
+                                    {category.name}
+                                </Text>
+                            </TouchableOpacity>
+                        ))}
                     </ScrollView>
                 </View>
 
                 {/* Products Grid */}
                 <View style={styles.productsGrid}>
-                    {products.map(renderProductCard)}
+                    {products.filter(p => !p.isAd).map((product) => (
+                        <ProductCard
+                            key={product.id}
+                            id={product.id}
+                            title={product.title}
+                            price={product.price}
+                            onBuyPress={() => console.log('Buy', product.id)}
+                            onFavoritePress={() => console.log('Favorite', product.id)}
+                            onPress={() => console.log('View', product.id)}
+                        />
+                    ))}
                 </View>
 
                 {/* Bottom Spacing */}
@@ -425,15 +404,40 @@ const styles = StyleSheet.create({
     section: {
         paddingTop: 20,
     },
+    sectionHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 16,
+        marginBottom: 16,
+    },
     sectionTitle: {
         fontSize: 20,
         fontWeight: 'bold',
         color: '#000',
-        marginBottom: 16,
-        paddingHorizontal: 16,
+    },
+    seeAllText: {
+        fontSize: 14,
+        color: '#888',
     },
     categoriesContainer: {
         paddingHorizontal: 16,
+        gap: 24,
+    },
+    categoryTab: {
+        paddingBottom: 8,
+    },
+    categoryTabActive: {
+        borderBottomWidth: 2,
+        borderBottomColor: '#000',
+    },
+    categoryTabText: {
+        fontSize: 14,
+        color: '#888',
+    },
+    categoryTabTextActive: {
+        color: '#000',
+        fontWeight: '600',
     },
     categoryItem: {
         alignItems: 'center',
@@ -500,6 +504,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         justifyContent: 'space-between',
         marginTop: 20,
+        rowGap: 16,
     },
     productCard: {
         width: CARD_WIDTH,
