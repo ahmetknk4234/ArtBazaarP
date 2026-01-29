@@ -61,12 +61,6 @@ const BottomNavigation: React.FC = () => {
         if (isActive) {
             return;
         }
-
-        if (tab.name !== 'home') {
-            console.log(`${tab.label} tab'ına tıklandı - Sayfa henüz mevcut değil`);
-            Alert.alert('Bilgi', `${tab.label} sayfası henüz oluşturulmadı.`);
-            return;
-        }
         router.push(tab.route as any);
     };
 
