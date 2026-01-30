@@ -9,6 +9,7 @@ import {
     Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { useAuth } from '../src/contexts/AuthContext';
 import { BottomNavigation, ProductCard } from '../src/components';
 
@@ -96,6 +97,7 @@ const products = [
 
 export default function Dashboard() {
     const { user } = useAuth();
+    const router = useRouter();
 
     return (
         <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
@@ -122,7 +124,10 @@ export default function Dashboard() {
                             <TouchableOpacity style={styles.iconButton}>
                                 <Image source={require('../src/assets/bag_icon.png')} style={{ width: 22, height: 22, tintColor: '#000' }} resizeMode="contain" />
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.profileButton}>
+                            <TouchableOpacity 
+                                style={styles.profileButton}
+                                onPress={() => router.push('/sales')}
+                            >
                                 <Image
                                     source={require('../src/assets/add_img.png')}
                                     style={styles.profileImage}

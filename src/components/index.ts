@@ -7,3 +7,5 @@ export { default as Divider } from './Divider';
 export { default as NavigationLink } from './NavigationLink';
 export { default as BottomNavigation } from './BottomNavigation';
 export { default as ProductCard } from './ProductCard';
+export { default as BackButton } from './BackButton';
+export { default as UpButton } from './UpButton';
